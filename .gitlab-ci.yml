@@ -1,0 +1,17 @@
+image: php:5.6
+
+stages:
+  - build
+variables:
+  DOCKER_DEV_URL: registry.gitlab.com/WebMob Technologies/laravel-example-app/build-laravel
+services:
+  - 'docker:19.03.5-dind'
+build-dev:
+  stage: build
+  script:
+    - 'docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY'
+    - 'apk add --no-cache curl jq python py-pip'
+    - 'docker build --pull -t $DOCKER_DEV_URL:$CI_JOB_ID -f development.dockerfile .'
+    - 'docker push $DOCKER_DEV_URL:$CI_JOB_ID'
+  only:
+    - main
