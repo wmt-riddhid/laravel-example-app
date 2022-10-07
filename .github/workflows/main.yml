@@ -69,12 +69,6 @@ jobs:
       if: github.ref == 'refs/heads/master'
 
       steps:
-
-      - name: download articals
-        uses: actions/download-artifact@v2
-        with:
-          name: production-file
-          path: ./build
           
       - name: deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
