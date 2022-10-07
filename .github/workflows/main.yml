@@ -63,31 +63,21 @@ jobs:
           run: npm run production
 
     deploy:
+      name: deploy
+      needs: build
+      runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/master'
 
-          runs-on: ubuntu-latest
+      steps:
 
-          steps:
-
-            - name: Checkout
-
-              uses: actions/checkout@v2
-
-            - name: Deployment
-
-              uses: appleboy/ssh-action@master
-
-              #with:
-
-                #host: ${{ secrets.SSH_HOST }}
-
-                #key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-              #username: ${{ secrets.SSH_USERNAME }}
-
-                  #script: |
-
-                  #cd /var/www/html/
-
-                  #git checkout -f 
-
-                  #git pull
+      - name: download articals
+        uses: actions/download-artifact@v2
+        with:
+          name: production-file
+          path: ./build
+          
+      - name: deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with: 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
